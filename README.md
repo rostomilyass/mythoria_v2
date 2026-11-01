@@ -1,116 +1,80 @@
-# Mythoria — Jeu de cartes à collectionner
+# Mythoria v2 - Game
 
-Site web officiel de **Mythoria**, un jeu de cartes à collectionner dark fantasy.
-Les joueurs découvrent l'univers du jeu, achètent des boosters et gèrent leur panier.
+Dark fantasy card game. This part of the project covers the game flow: the menu, the pre-game setup and the arena.
 
-**Site en ligne (Vercel) :** https://mythoria-gilt.vercel.app/
-**Planification des tâches :** [GitHub Projects — Mythoria](https://github.com/users/rostomilyass/projects/5) · [Liste des issues](https://github.com/rostomilyass/Mythoria/issues)
+## Pages
 
----
+| Page | File | Description |
+|------|------|-------------|
+| Game menu | `index.html` | MYTHORIA logo and the two game modes. **Play vs Bot** goes to the setup. **Player 1 vs Player 2** shows an alert, because this mode is not made yet. |
+| Setup | `setup.html` | Three steps before the fight: coin toss to decide who starts, the starter chooses Light or Darkness, the opponent automatically gets the opposite side. |
+| Arena | `arena.html` | The game board: 6x6 grid, life points for both players, deck column, and a **Quitter** button that opens a confirmation modal. |
 
-## Sommaire
-1. [Contexte](#contexte)
-2. [État d'avancement (livrable du jour 4)](#état-davancement-livrable-du-jour-4)
-3. [Technologies](#technologies)
-4. [Structure du projet](#structure-du-projet)
-5. [Règles du jeu définies dans le projet](#règles-du-jeu-définies-dans-le-projet)
-6. [Planification et déroulé des 4 jours](#planification-et-déroulé-des-4-jours)
-7. [Prochaines étapes](#prochaines-étapes)
-8. [Auteur](#auteur)
-
----
-
-## Contexte
-
-Le studio souhaite lancer Mythoria, un jeu de cartes dans lequel les joueurs découvrent des créatures, des héros, des serviteurs et des sorts. La mission est de concevoir et développer le site web du jeu : boutique de boosters, ouverture des paquets, collection (grimoire) et création de deck.
-
-## État d'avancement (livrable du jour 4)
-
-| Page | Statut | Détail |
-|---|---|---|
-| **Home** (`index.html`) | Terminée | Hero, boosters, catégories de cartes, cartes légendaires, navigation |
-| **Boutique** (`shop.html`) | Terminée | Liste des boosters, panier fonctionnel, total en temps réel |
-| Opening Chamber (`opening.html`) | À venir | Ouverture animée des boosters |
-| My Grimoire (`grimoire.html`) | À venir | Collection sous forme de livre |
-| My Deck (`deck.html`) | À venir | Création du deck |
-
-### Page d'accueil
-- Section **Hero** immersive : nom du jeu, illustration, slogan
-- Boutons « **Découvrir les boosters** » (vers la boutique) et « **Ouvrir mon grimoire** » (vers la collection)
-- Présentation des **4 catégories de cartes** : Serviteurs de la Lumière, Serviteurs des Ténèbres, Minions, Spells
-- Section des **4 boosters** disponibles
-- Mise en avant de **cartes légendaires** (Aurelion, Nyxarion, Brasier des Mille Runes, Grimble le Fourbe)
-- Navigation vers toutes les pages, avec compteur de panier dans l'en-tête
-
-### Boutique (Booster Shop)
-| Booster | Prix |
-|---|---|
-| Beginner Pack — Pack du débutant | 3,99 € |
-| Summoning of the Legends — Invocation des légendes | 9,99 € |
-| Dark Summoning — Invocation obscure | 6,99 € |
-| Lucky Pack — Pack de la chance | 5,99 € |
-
-Chaque booster affiche son illustration, son nom, sa description et son prix.
-
-### Panier
-- [x] Ajouter un booster au panier
-- [x] Total du panier mis à jour en temps réel
-- [x] Conservation du panier après actualisation (**LocalStorage**)
-- [x] Bouton « Commander » (validation simulée, sans paiement réel)
-- [x] Choix de la quantité, retrait d'un booster
-
-## Technologies
-- **HTML5** et **CSS3** (variables CSS, Flexbox, Grid)
-- **JavaScript** (vanilla) : logique du panier
-- **Illustrations SVG** originales (dossier `assets/`)
-- **Git / GitHub** : versionnement et planification (Projects, Issues, Milestones)
-- **Vercel** : hébergement
-
-## Structure du projet
+## Game flow
 
 ```
-mythoria/
-├── index.html          # Page d'accueil
-├── shop.html           # Boutique + panier
-├── css/
-│   └── style.css
-├── js/                 # Logique JavaScript (panier, etc.)
-├── assets/             # Illustrations SVG (boosters, catégories, cartes)
-├── PLANNING_ISSUES.md  # Liste des tâches du projet
+index.html  ->   setup.html  ->  arena.html
+                   ^                              |
+                   |______________ Quitter _______|
+```
+
+1. From the home page, the player opens the game menu (`index.html`).
+2. **Play vs Bot** leads to `setup.html`.
+3. In the setup:
+   - **Step 1 - Coin toss:** a random draw decides who plays first.
+   - **Step 2 - Choose a side:** the player who starts picks Light or Darkness.
+   - **Step 3 - Opponent side:** the opponent receives the opposite side (Light gives Darkness, Darkness gives Light).
+4. **Entrer dans l'arène** leads to `arena.html`.
+5. In the arena, **Quitter** opens a modal. Confirming counts as a defeat and goes back to `game.html`.
+
+## Tech stack
+
+- HTML5
+- [Tailwind CSS v4](https://tailwindcss.com) loaded from the CDN (`@tailwindcss/browser@4`), with a custom `@theme` (colors and fonts)
+- Google Fonts: Cinzel, Cinzel Decorative, Crimson Pro
+- Vanilla JavaScript (only used for the alert and the quit modal for now)
+- Native `<dialog>` element for the quit modal
+
+## Project structure
+
+```
+mythoria_v2/
+├── index.html
+├── setup.html
+├── arena.html
 └── README.md
 ```
 
-> Adapte cet arbre aux fichiers réels de ton dépôt.
+## Run it locally
 
-## Règles du jeu définies dans le projet
+No build step needed.
 
-- Un booster contient **5 cartes**, tirées aléatoirement dans un catalogue défini en JavaScript.
-- Les probabilités d'obtention dépendent du type de booster et sont définies dans les données du jeu.
-- La **collection** peut contenir plusieurs exemplaires d'une même carte.
-- Le **deck** contient **20 cartes maximum**, avec **1 seule copie** de chaque carte unique.
-- Le panier, la collection et le deck sont conservés dans le **LocalStorage**.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/<your-username>/mythoria_v2.git
+   ```
+2. Open `index.html` in your browser (or use the VS Code **Live Server** extension).
 
-## Planification et déroulé des 4 jours
+An internet connection is needed to load Tailwind and the fonts from their CDNs.
 
-La planification est gérée sur GitHub : **Projects** (tableau Kanban), **Issues** (une tâche = une issue) .
+## Design
 
-| Jour | Travail réalisé |
-|---|---|
-| Jour 1 | Lecture du brief, choix de la direction artistique (palette dark fantasy, polices), structure du projet, planification GitHub |
-| Jour 2 | Maquette et page d'accueil (HTML/CSS), illustrations SVG |
-| Jour 3 | Page Boutique : affichage des boosters, premières fonctions du panier |
-| Jour 4 | Panier complet (total en temps réel, commande simulée), déploiement sur Vercel, README |
+| Color | Hex | Use |
+|-------|-----|-----|
+| `gold` | `#e0b857` | Titles, player side |
+| `gold-hi` | `#ffd978` | Highlights, light side |
+| `violet` | `#9b6bff` | Opponent side, darkness |
+| `bg` / `panel` | `#1a1626` / `#241d38` | Backgrounds and cards |
+| `text` / `muted` | `#f5f0e1` / `#c9bfa8` | Text |
 
-> Ajuste ce tableau à ce que tu as réellement fait chaque jour.
+## Status
 
-## Prochaines étapes
-
-1. **Données** : catalogue de cartes et probabilités des boosters
-2. **Opening Chamber** : tirage aléatoire pondéré et animation de révélation
-3. **My Grimoire** : collection en forme de livre, filtres par type et rareté
-4. **My Deck** : création du deck, limite de 20 cartes, statistiques
-5. **Bonus** : effet holographique, compteur de cartes découvertes, historique, reçu imprimable
-
-## Auteur
-
-Projet réalisé par **Ilyass** dans le cadre de la formation.
+- [x] Game menu with the two buttons
+- [x] "Not available yet" alert for Player 1 vs Player 2
+- [x] Setup page layout (3 steps)
+- [x] Arena layout (board, life points, quit modal)
+- [ ] Coin toss logic
+- [ ] Side choice logic and saving the sides (`localStorage`: `playerSide` / `botSide`)
+- [ ] Arena gameplay: turns, playing cards, bot
+- [ ] Quit counts as a defeat
+- [ ] Player 1 vs Player 2 mode
